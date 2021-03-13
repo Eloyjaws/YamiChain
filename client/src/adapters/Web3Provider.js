@@ -38,18 +38,26 @@ export function Web3Provider(props){
             // example of interacting with the contract's methods.
             setWeb3(web3);
             setAccounts(accounts);
-            setContract(instance, runExample);
-
+            setContract(instance);
         } catch (error) {
             // Catch any errors for any of the above operations.
             alert(
                 `Failed to load web3, accounts, or contract. Check console for details.`,
             );
             console.error(error);
+            return <>Whoops</>
         }
     }
+    
+    useEffect(() => {
+        initializeApp();
+    }, []);
 
-    useEffect(initializeApp, [])
+    useEffect(() => {
+        if(contract){
+            runExample();
+        }
+    }, [contract]);
 
     if (!web3) {
         return <div>Loading Web3, accounts, and contract...</div>;
