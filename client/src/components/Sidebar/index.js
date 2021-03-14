@@ -25,9 +25,7 @@ import { useAppState } from '../../contexts/AppContext';
 
 const disableServiceLink = (e) => e.preventDefault();
 
-// const SidebarLinks = () => 'a';
-
-const SidebarLinks = ({ menuItems, iconColor = 'teal.300' }) => (
+const SidebarLinks = ({ menuItems, iconColor = 'white' }) => (
   <>
     {Object.entries(menuItems).map(
       ([route, { name, icon, value, isDisabled, isSubMenu }]) => (
@@ -49,9 +47,9 @@ const SidebarLinks = ({ menuItems, iconColor = 'teal.300' }) => (
             bg="transparent"
             display="flex"
             alignItems="center"
-            _active={!isDisabled && { bg: 'purple.700' }}
+            _active={!isDisabled && { bg: 'blue.500' }}
             _focus={!isDisabled && { boxShadow: 'outline' }}
-            _hover={!isDisabled && { background: 'purple.lighter' }}
+            _hover={!isDisabled && { background: 'blue.600' }}
             textAlign="left"
           >
             {!isSubMenu && <Icon as={icon} color={iconColor} mx={2} />}
@@ -78,22 +76,22 @@ export function MobileNavigationDrawer({ isOpen, onClose }) {
       <DrawerContent height="100%">
         <DrawerCloseButton color="gray.300" />
 
-        <DrawerHeader backgroundColor="#5e26c2" justifyContent="center">
+        <DrawerHeader backgroundColor="blue.400" justifyContent="center">
           <img src={Logo} alt="Yamichain Logo" />
         </DrawerHeader>
 
-        <DrawerBody backgroundColor="#5e26c2" color="#fff" overflowY="scroll">
+        <DrawerBody backgroundColor="blue.400" color="#fff" overflowY="scroll">
           <SidebarLinks {...{ menuItems }} />
         </DrawerBody>
 
-        <DrawerFooter backgroundColor="#5e26c2">
+        <DrawerFooter backgroundColor="blue.400">
           <Flex flex={1} direction="column" justifyContent="start">
             <SidebarLinks menuItems={footerMenuItems} />
             <Menu>
               <MenuButton
                 onClick={logout}
                 style={{ textAlign: 'left', paddingLeft: '6.5px' }}
-                background="#5e26c2"
+                background="blue.400"
                 color="#fff"
               >
                 <SmallCloseIcon
@@ -115,7 +113,7 @@ export function MobileNavigationDrawer({ isOpen, onClose }) {
 const Sidebar = () => (
   <>
     <Box
-      backgroundColor="#5e26c2"
+      backgroundColor="blue.400"
       color="#fff"
       height="100vh"
       width="264px"
@@ -134,7 +132,7 @@ const Sidebar = () => (
       </Flex>
       <SidebarLinks {...{ menuItems }} />
       <Flex flex={1} direction="column" justifyContent="flex-end">
-        <SidebarLinks iconColor="gray.400" menuItems={footerMenuItems} />
+        <SidebarLinks menuItems={footerMenuItems} />
       </Flex>
     </Box>
   </>

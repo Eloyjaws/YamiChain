@@ -72,7 +72,7 @@ const Header = (props) => {
           </Text>
           <Avatar
             color="white"
-            backgroundColor="purple.700"
+            backgroundColor="blue.400"
             size="sm"
             name="0 x"
             style={{ marginLeft: 8 }}

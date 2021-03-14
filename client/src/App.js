@@ -7,7 +7,7 @@ import Router from './router';
 import './App.css';
 
 function App() {
-  return ( 
+  return (
     <ChakraProvider>
       <StateProvider>
         <Web3Provider>
