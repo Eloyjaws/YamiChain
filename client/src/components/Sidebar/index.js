@@ -119,7 +119,7 @@ const Sidebar = () => (
       width="264px"
       minW="264px"
       direction="column"
-      display={{ xs: 'none', sm: 'none', md: 'flex' }}
+      display={{ base: 'none', sm: 'none', md: 'flex' }}
       flexDirection="column"
       padding={6}
       position="sticky"

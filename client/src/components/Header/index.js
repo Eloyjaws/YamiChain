@@ -65,7 +65,7 @@ const Header = (props) => {
       </Flex>
 
       <Flex direction="row">
-        <Box display={{ sm: 'none', md: 'flex' }} alignItems="center">
+        <Box display={{ base: 'none', md: 'flex' }} alignItems="center">
           Hello,
           <Text fontSize="md" fontWeight="normal" style={{ marginLeft: 8 }}>
             {username}
@@ -94,7 +94,7 @@ const Header = (props) => {
           </Menu>
         </Box>
 
-        <Box display={{ sm: 'block', md: 'none' }}>
+        <Box display={{ base: 'block', md: 'none' }}>
           <Button onClick={props.onOpen} background="white">
             <svg
               fill="gray.700"
