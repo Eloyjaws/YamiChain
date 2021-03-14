@@ -119,7 +119,7 @@ export const RouteObjects = [
       <Route
         exact
         key="/payments"
-        path="/payment"
+        path="/payments"
         render={() => (
           <ErrorBoundary>
             <Payments />

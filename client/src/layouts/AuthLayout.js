@@ -1,22 +1,21 @@
-import React, { useContext } from 'react';
-import { Flex, Box } from '@chakra-ui/core';
-import { createAuthClient } from '../utils/api';
-
-export const AuthContext = React.createContext();
-
-export const useAuthAPI = () => useContext(AuthContext);
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Flex, Box } from '@chakra-ui/react';
 
 function AuthLayout({ children }) {
-  const AUTH_CLIENT = createAuthClient();
   return (
     <Flex flex={1} direction="row">
-      <Box>
-        <AuthContext.Provider value={AUTH_CLIENT}>
-          {children}
-        </AuthContext.Provider>
-      </Box>
+      <p>Select your wallet</p>
+      <Box>{children}</Box>
     </Flex>
   );
 }
+
+AuthLayout.propTypes = {
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+  ]).isRequired,
+};
 
 export default AuthLayout;

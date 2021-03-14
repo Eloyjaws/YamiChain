@@ -28,6 +28,10 @@ function useProvideAppState() {
   const [contract, setContract] = useState(null);
   const [persistedState, setPersistedState] = useLocalStorage('persistor', {});
 
+  function userLogout() {
+    setAccounts(null);
+  }
+
   return {
     persistedState,
     setPersistedState,
@@ -39,5 +43,7 @@ function useProvideAppState() {
     setWeb3,
     setAccounts,
     setContract,
+
+    userLogout,
   };
 }
