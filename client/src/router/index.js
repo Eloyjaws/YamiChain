@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
-import { Spinner, Box } from '@chakra-ui/react';
+import { Spinner, Box, Text } from '@chakra-ui/react';
 
 import ErrorBoundary from '../components/ErrorBoundary';
 import { AuthLayout, AppLayout } from '../layouts';
@@ -27,6 +27,7 @@ const Router = () => {
           justifyContent="center"
           alignItems="center"
         >
+          <Text mb={4}>No wallet address detected</Text>
           <Spinner color="green.500" size="xl" thickness="3px" />
         </Box>
       ) : (

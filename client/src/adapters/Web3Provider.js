@@ -2,6 +2,7 @@
 /* eslint-disable no-shadow */
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { Box, Text, Spinner } from '@chakra-ui/react';
 
 import { useAppState } from '../contexts/AppContext';
 import SimpleStorageContract from '../contracts/SimpleStorage.json';
@@ -52,11 +53,22 @@ export function Web3Provider(props) {
   }, [contract]);
 
   if (web3 == null) {
-    return <div>Loading Web3, accounts, and contract...</div>;
+    return (
+      <Box
+        minW="100vw"
+        minH="100vh"
+        display="flex"
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Text mb={4}>Loading Web3, accounts, and contract...</Text>
+        <Spinner color="green.500" size="xl" thickness="3px" />
+      </Box>
+    );
   }
 
   const { children } = props;
-
   return <>{children}</>;
 }
 
