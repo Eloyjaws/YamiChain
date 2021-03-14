@@ -1,73 +1,68 @@
-import React, { useState, useEffect } from "react";
-import SimpleStorageContract from "../contracts/SimpleStorage.json";
-import getWeb3 from "./getWeb3";
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-shadow */
+import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 
-export function Web3Provider(props){
-    const [storageValue, setStorageValue] = useState(0);
-    const [web3, setWeb3] = useState(null);
-    const [accounts, setAccounts] = useState(null);
-    const [contract, setContract] = useState(null);
+import { useAppState } from '../contexts/AppContext';
+import SimpleStorageContract from '../contracts/SimpleStorage.json';
+import getWeb3 from './getWeb3';
 
-    async function runExample() {
-        await contract.methods.set(5).send({ from: accounts[0] });
+export function Web3Provider(props) {
+  const { setWeb3, setAccounts, setContract, web3, contract } = useAppState();
 
-        // Get the value from the contract to prove it worked.
-        const response = await contract.methods.get().call();
+  async function initializeApp() {
+    try {
+      // Get network provider and web3 instance.
+      const web3 = await getWeb3();
 
-        // Update state with the result.
-        setStorageValue(response);
-    };
+      // Use web3 to get the user's accounts.
+      const accounts = await web3.eth.getAccounts();
 
-    async function initializeApp() {
-        try {
-            // Get network provider and web3 instance.
-            const web3 = await getWeb3();
+      // Get the contract instance.
+      const networkId = await web3.eth.net.getId();
+      const deployedNetwork = SimpleStorageContract.networks[networkId];
+      const instance = new web3.eth.Contract(
+        SimpleStorageContract.abi,
+        deployedNetwork && deployedNetwork.address
+      );
 
-            // Use web3 to get the user's accounts.
-            const accounts = await web3.eth.getAccounts();
-
-            // Get the contract instance.
-            const networkId = await web3.eth.net.getId();
-            const deployedNetwork = SimpleStorageContract.networks[networkId];
-            const instance = new web3.eth.Contract(
-                SimpleStorageContract.abi,
-                deployedNetwork && deployedNetwork.address,
-            );
-
-            // Set web3, accounts, and contract to the state, and then proceed with an
-            // example of interacting with the contract's methods.
-            setWeb3(web3);
-            setAccounts(accounts);
-            setContract(instance);
-        } catch (error) {
-            // Catch any errors for any of the above operations.
-            alert(
-                `Failed to load web3, accounts, or contract. Check console for details.`,
-            );
-            console.error(error);
-            return <>Whoops</>
-        }
+      // Set web3, accounts, and contract to the state, and then proceed with an
+      // example of interacting with the contract's methods.
+      setWeb3(web3);
+      setAccounts(accounts);
+      setContract(instance);
+    } catch (error) {
+      // Catch any errors for any of the above operations.
+      alert(
+        `Failed to load web3, accounts, or contract. Check console for details.`
+      );
+      console.error(error);
+      return <>Whoops</>;
     }
-    
-    useEffect(() => {
-        initializeApp();
-    }, []);
+  }
 
-    useEffect(() => {
-        if(contract){
-            runExample();
-        }
-    }, [contract]);
+  useEffect(() => {
+    initializeApp();
+  }, []);
 
-    if (!web3) {
-        return <div>Loading Web3, accounts, and contract...</div>;
+  useEffect(() => {
+    if (contract) {
+      console.log('Retrieved contract');
     }
+  }, [contract]);
 
-    return (
-        <>
-            <h1>Good to Go!</h1>
-            <div>The stored value is: {storageValue}</div>
-            {props.children}
-        </>
-    )
+  if (web3 == null) {
+    return <div>Loading Web3, accounts, and contract...</div>;
+  }
+
+  const { children } = props;
+
+  return <>{children}</>;
 }
+
+Web3Provider.propTypes = {
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+  ]).isRequired,
+};
