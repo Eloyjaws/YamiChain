@@ -14,7 +14,13 @@ function AppLayout({ children }) {
       <Sidebar />
       <Flex flex={1} direction="column" background="#f3f4f8">
         <Header {...{ onOpen }} />
-        <Box mt={8} mb={8} padding="0 1.5rem" maxWidth="100vw">
+        <Box
+          mt={8}
+          mb={8}
+          padding="0 1.5rem"
+          maxWidth="100vw"
+          backgroundCOlor="rgb(252, 253, 254);"
+        >
           {children}
         </Box>
       </Flex>

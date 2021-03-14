@@ -1,20 +1,20 @@
 import React from 'react';
-import { ChakraProvider } from '@chakra-ui/react';
 import { Provider as StateProvider } from './contexts/AppContext';
 import { Web3Provider } from './adapters/Web3Provider';
+import { ThemeProvider } from './adapters/ThemeProvider';
 import Router from './router';
 
 import './App.css';
 
 function App() {
   return (
-    <ChakraProvider>
-      <StateProvider>
-        <Web3Provider>
+    <StateProvider>
+      <Web3Provider>
+        <ThemeProvider>
           <Router />
-        </Web3Provider>
-      </StateProvider>
-    </ChakraProvider>
+        </ThemeProvider>
+      </Web3Provider>
+    </StateProvider>
   );
 }
 
