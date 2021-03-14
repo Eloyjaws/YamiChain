@@ -36,20 +36,20 @@ export default function Overview() {
   return (
     <Grid
       h="100%"
-      templateRows="repeat(3, 1fr)"
-      templateColumns="repeat(5, 1fr)"
+      templateRows={{ base: 'repeat(6, 1fr)', md: 'repeat(3, 1fr)' }}
+      templateColumns={{ base: 'repeat(1, 1fr)', md: 'repeat(5, 1fr)' }}
       gap={4}
     >
-      <GridItem rowSpan={2} colSpan={3}>
+      <GridItem rowSpan={{ base: 2, md: 2 }} colSpan={{ base: 1, md: 3 }}>
         <Rope />
       </GridItem>
-      <GridItem rowSpan={1} colSpan={2}>
+      <GridItem rowSpan={{ base: 1, md: 1 }} colSpan={{ base: 1, md: 2 }}>
         <Rope />
       </GridItem>
-      <GridItem rowSpan={1} colSpan={2}>
+      <GridItem rowSpan={{ base: 1, md: 1 }} colSpan={{ base: 1, md: 2 }}>
         <Rope />
       </GridItem>
-      <GridItem colSpan={5}>
+      <GridItem rowSpan={{ base: 2, md: 1 }} colSpan={{ base: 1, md: 5 }}>
         <Rope />
       </GridItem>
     </Grid>

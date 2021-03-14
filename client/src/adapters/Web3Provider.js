@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { Box, Text, Spinner } from '@chakra-ui/react';
 
 import { useAppState } from '../contexts/AppContext';
-import SimpleStorageContract from '../contracts/SimpleStorage.json';
+import YamiChain from '../contracts/YamiChain.json';
 import getWeb3 from './getWeb3';
 
 export function Web3Provider(props) {
@@ -21,9 +21,9 @@ export function Web3Provider(props) {
 
       // Get the contract instance.
       const networkId = await web3.eth.net.getId();
-      const deployedNetwork = SimpleStorageContract.networks[networkId];
+      const deployedNetwork = YamiChain.networks[networkId];
       const instance = new web3.eth.Contract(
-        SimpleStorageContract.abi,
+        YamiChain.abi,
         deployedNetwork && deployedNetwork.address
       );
 
