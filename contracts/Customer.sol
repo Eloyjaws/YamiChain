@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 
-pragma solidity ^0.8.0;
+pragma solidity >=0.6.0 <0.8.0;
+pragma abicoder v2;
 
 // Set of rules to be able to retrieve a customer by their details
 

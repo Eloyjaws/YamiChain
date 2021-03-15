@@ -1,19 +1,30 @@
 // SPDX-License-Identifier: UNLICENSED
 
-pragma solidity ^0.8.0;
+pragma solidity >=0.6.0 <0.8.0;
 
-import '../access/Ownable.sol';
-import '../access/AccessControl.sol';
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
 
 contract Provider is Ownable, AccessControl {
-    AccessControl.RoleData private _readers;
-    AccessControl.RoleData private _editors;
+    string public name;
+    string public location;
     
     bytes32 public constant EDITING_ROLE = keccak256("EDITING_ROLE");
 
     modifier onlyAdmin (){
         require(hasRole(DEFAULT_ADMIN_ROLE, msg.sender));
         _;
+    }
+
+    event ProviderCreated(string indexed providerName, address indexed currentAdmin);
+
+    constructor (address _admin, string memory _name, string memory _location){
+        name = _name;
+        location = _location;
+
+        // Now set the rights to this
+        grantRole(DEFAULT_ADMIN_ROLE, _admin);
+        emit ProviderCreated(_name, _admin);
     }
 
     function addEmployee(address _account) external onlyAdmin {
