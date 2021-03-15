@@ -23,7 +23,7 @@ contract Provider is Ownable, AccessControl {
         location = _location;
 
         // Now set the rights to this
-        grantRole(DEFAULT_ADMIN_ROLE, _admin);
+        _setupRole(DEFAULT_ADMIN_ROLE, _admin);
         emit ProviderCreated(_name, _admin);
     }
 
