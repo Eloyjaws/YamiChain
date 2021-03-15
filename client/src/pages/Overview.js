@@ -1,6 +1,9 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import { Box, Text, Grid, GridItem, Button } from '@chakra-ui/react';
 import { Card } from '../components/Card';
+import { buttonStyles } from '../components/styles';
+import { useAppState } from '../contexts/AppContext';
 
 const Rope = () => (
   <Card title="Loans">
@@ -18,21 +21,25 @@ const Rope = () => (
       <Text mb={6} fontWeight="500">
         Log a customer's loan repayment
       </Text>
-      <Button
-        borderRadius="4"
-        backgroundColor="#f4f8fc"
-        colorScheme="blue"
-        color="blue.400"
-        py={5}
-        variant="ghost"
-      >
-        Log a repayment
-      </Button>
+      <Button {...buttonStyles}>Log a repayment</Button>
     </Box>
   </Card>
 );
 
 export default function Overview() {
+  const { contract, accounts } = useAppState();
+  console.log({ contract, accounts });
+  // if (contract)
+  //   contract.methods
+  //     .addProvider(
+  //       '0xc4902683cc495A8afb04Ce3BC974CEA5C1c13fa0',
+  //       'maisonv',
+  //       '2500'
+  //     )
+  //     .send({
+  //       from: accounts[0],
+  //     })
+  //     .then(console.log);
   return (
     <Grid
       h="100%"
