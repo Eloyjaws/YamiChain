@@ -1,0 +1,3 @@
+#! /bin/bash
+rm -r client/src/contracts/
+truffle deploy --reset
