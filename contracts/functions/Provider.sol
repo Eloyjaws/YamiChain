@@ -28,7 +28,7 @@ contract Provider is Ownable, AccessControl {
     }
 
     // Should this remain here or should we change the access rights?
-    function isEmployee (address _address) external view returns (bool) {
+     function isEmployee (address _address) external view returns (bool) {
         return hasRole(EDITING_ROLE, _address);
     }
 

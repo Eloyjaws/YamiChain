@@ -1,5 +1,7 @@
-var Main = artifacts.require("./Main.sol");
+var MainContract = artifacts.require("./YamiChain.sol");
+var MicroLending = artifacts.require("./Lending.sol");
 
 module.exports = function(deployer) {
-  deployer.deploy(Main);
+  deployer.deploy(MainContract);
+  deployer.deploy(MicroLending);
 };
