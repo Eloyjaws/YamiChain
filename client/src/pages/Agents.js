@@ -12,47 +12,20 @@ import { useForm } from 'react-hook-form';
 import { DataTable } from '../components/Table';
 import { Card } from '../components/Card';
 import { buttonStyles } from '../components/styles';
+import { useAppState } from '../contexts/AppContext';
 
-export default function AgentsTable() {
-  const data = React.useMemo(
-    () => [
-      {
-        address: '0X3333',
-        name: 'Saint',
-        location: 'Kigali',
-      },
-      {
-        address: '0X3333',
-        name: 'Saint',
-        location: 'Kigali',
-      },
-      {
-        address: '0X3333',
-        name: 'Saint',
-        location: 'Kigali',
-      },
-      {
-        address: '0X3333',
-        name: 'Saint',
-        location: 'Kigali',
-      },
-      {
-        address: '0X3333',
-        name: 'Saint',
-        location: 'Kigali',
-      },
-    ],
-    []
-  );
+export default function ProvidersTable() {
+  const [providers, setProviders] = React.useState([]);
+  const data = React.useMemo(() => providers, [providers]);
 
   const columns = React.useMemo(
     () => [
       {
-        Header: 'Agent Address',
+        Header: 'Provider Address',
         accessor: 'address',
       },
       {
-        Header: 'Agent Name',
+        Header: 'Provider Name',
         accessor: 'name',
       },
       {
@@ -63,6 +36,34 @@ export default function AgentsTable() {
     []
   );
 
+  const { yamiChainContract } = useAppState();
+
+  if (yamiChainContract)
+    yamiChainContract.events.ProviderCreated().on('data', (res) => {
+      // const [address, name, location] = res.returnValues;
+      // // eslint-disable-next-line prettier/prettier
+      const address = `${res.returnValues[0].slice(0, 16)}...`;
+      const name = res.returnValues[1];
+      const location = res.returnValues[2];
+      const parsed = { address, name, location };
+      setProviders([...providers, parsed]);
+    });
+
+  React.useEffect(() => {
+    if (yamiChainContract)
+      yamiChainContract.methods
+        .getProviders()
+        .call()
+        .then((res) => {
+          const parsed = res.map((x) => {
+            const [address, name, location] = x;
+            // eslint-disable-next-line prettier/prettier
+            return ({ address: `${address.slice(0, 16)  }...`, name, location });
+          });
+          setProviders(parsed);
+        });
+  }, [yamiChainContract]);
+
   return (
     <Grid
       h="100%"
@@ -71,39 +72,48 @@ export default function AgentsTable() {
       gap={4}
     >
       <GridItem rowSpan={{ base: 2, md: 2 }} colSpan={{ base: 1, md: 3 }}>
-        <Card title="List of Agents" boxProps={{ pb: 4 }}>
+        <Card title="List of Providers" boxProps={{ pb: 4 }}>
           <DataTable columns={columns} data={data} />
         </Card>
       </GridItem>
       <GridItem rowSpan={{ base: 2, md: 2 }} colSpan={{ base: 1, md: 2 }}>
-        <AddAgent />
+        <AddProvider />
       </GridItem>
     </Grid>
   );
 }
 
-function AddAgent() {
+function AddProvider() {
   const { handleSubmit, register, formState, reset } = useForm();
-
+  const { yamiChainContract, accounts } = useAppState();
   function onSubmit(values) {
-    console.log(JSON.stringify(values, null, 2));
+    const { address, name, location } = values;
+    console.log(yamiChainContract);
+    yamiChainContract.methods
+      .createProvider(address, name, location)
+      .send({ from: accounts[0] })
+      .then(console.log);
     reset();
   }
 
   return (
-    <Card title="Add Agent" boxProps={{ p: 6 }}>
+    <Card title="Add Provider" boxProps={{ p: 6 }}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormControl isRequired>
-          <FormLabel>Agent address</FormLabel>
-          <Input ref={register} name="address" placeholder="Agent address" />
+          <FormLabel>Provider address</FormLabel>
+          <Input ref={register} name="address" placeholder="Provider address" />
         </FormControl>
         <FormControl mt={8} isRequired>
-          <FormLabel>Agent name</FormLabel>
-          <Input ref={register} name="name" placeholder="Agent name" />
+          <FormLabel>Provider name</FormLabel>
+          <Input ref={register} name="name" placeholder="Provider name" />
         </FormControl>
         <FormControl mt={8} isRequired>
-          <FormLabel>Agent location</FormLabel>
-          <Input ref={register} name="location" placeholder="Agent location" />
+          <FormLabel>Provider location</FormLabel>
+          <Input
+            ref={register}
+            name="location"
+            placeholder="Provider location"
+          />
         </FormControl>
         <Button
           {...buttonStyles}

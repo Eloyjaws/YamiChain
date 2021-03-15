@@ -25,7 +25,7 @@ export function useAppState() {
 function useProvideAppState() {
   const [web3, setWeb3] = useState(null);
   const [accounts, setAccounts] = useState(null);
-  const [contract, setContract] = useState(null);
+  const [yamiChainContract, setYamiChainContract] = useState(null);
   const [persistedState, setPersistedState] = useLocalStorage('persistor', {});
 
   function userLogout() {
@@ -37,12 +37,13 @@ function useProvideAppState() {
     setPersistedState,
 
     web3,
-    accounts,
-    contract,
-
     setWeb3,
+
+    accounts,
     setAccounts,
-    setContract,
+
+    yamiChainContract,
+    setYamiChainContract,
 
     userLogout,
   };

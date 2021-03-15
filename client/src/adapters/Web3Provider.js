@@ -9,7 +9,13 @@ import YamiChain from '../contracts/YamiChain.json';
 import getWeb3 from './getWeb3';
 
 export function Web3Provider(props) {
-  const { setWeb3, setAccounts, setContract, web3, contract } = useAppState();
+  const {
+    setWeb3,
+    setAccounts,
+    setYamiChainContract,
+    web3,
+    contract,
+  } = useAppState();
 
   async function initializeApp() {
     try {
@@ -31,7 +37,7 @@ export function Web3Provider(props) {
       // example of interacting with the contract's methods.
       setWeb3(web3);
       setAccounts(accounts);
-      setContract(instance);
+      setYamiChainContract(instance);
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(

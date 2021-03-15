@@ -12,38 +12,11 @@ import { useForm } from 'react-hook-form';
 import { DataTable } from '../components/Table';
 import { Card } from '../components/Card';
 import { buttonStyles } from '../components/styles';
+import { useAppState } from '../contexts/AppContext';
 
 export default function ProvidersTable() {
-  const data = React.useMemo(
-    () => [
-      {
-        address: '0X3333',
-        name: 'Saint',
-        location: 'Kigali',
-      },
-      {
-        address: '0X3333',
-        name: 'Saint',
-        location: 'Kigali',
-      },
-      {
-        address: '0X3333',
-        name: 'Saint',
-        location: 'Kigali',
-      },
-      {
-        address: '0X3333',
-        name: 'Saint',
-        location: 'Kigali',
-      },
-      {
-        address: '0X3333',
-        name: 'Saint',
-        location: 'Kigali',
-      },
-    ],
-    []
-  );
+  const [providers, setProviders] = React.useState([]);
+  const data = React.useMemo(() => providers, [providers]);
 
   const columns = React.useMemo(
     () => [
@@ -62,6 +35,34 @@ export default function ProvidersTable() {
     ],
     []
   );
+
+  const { yamiChainContract } = useAppState();
+
+  if (yamiChainContract)
+    yamiChainContract.events.ProviderCreated().on('data', (res) => {
+      // const [address, name, location] = res.returnValues;
+      // // eslint-disable-next-line prettier/prettier
+      const address = `${res.returnValues[0].slice(0, 16)}...`;
+      const name = res.returnValues[1];
+      const location = res.returnValues[2];
+      const parsed = { address, name, location };
+      setProviders([...providers, parsed]);
+    });
+
+  React.useEffect(() => {
+    if (yamiChainContract)
+      yamiChainContract.methods
+        .getProviders()
+        .call()
+        .then((res) => {
+          const parsed = res.map((x) => {
+            const [address, name, location] = x;
+            // eslint-disable-next-line prettier/prettier
+            return ({ address: `${address.slice(0, 16)  }...`, name, location });
+          });
+          setProviders(parsed);
+        });
+  }, [yamiChainContract]);
 
   return (
     <Grid
@@ -84,9 +85,14 @@ export default function ProvidersTable() {
 
 function AddProvider() {
   const { handleSubmit, register, formState, reset } = useForm();
-
+  const { yamiChainContract, accounts } = useAppState();
   function onSubmit(values) {
-    console.log(JSON.stringify(values, null, 2));
+    const { address, name, location } = values;
+    console.log(yamiChainContract);
+    yamiChainContract.methods
+      .createProvider(address, name, location)
+      .send({ from: accounts[0] })
+      .then(console.log);
     reset();
   }
 
