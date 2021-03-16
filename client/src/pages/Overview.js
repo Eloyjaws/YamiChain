@@ -1,12 +1,18 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
-import { Box, Text, Grid, GridItem, Button } from '@chakra-ui/react';
+import { Box, Text, Grid, GridItem, Button, Icon } from '@chakra-ui/react';
+import { FaHandshake } from 'react-icons/fa';
+import { useHistory } from 'react-router-dom';
 import { Card } from '../components/Card';
 import { buttonStyles } from '../components/styles';
-import { useAppState } from '../contexts/AppContext';
 
-const Rope = () => (
-  <Card title="Loans">
+import { CompleteLoanHistory } from '../components/OverviewHelpers/CompleteLoanHistory';
+// import {} from '../components/OverviewHelpers/OngoingLoans';
+import { PaidLoans } from '../components/OverviewHelpers/PaidLoans';
+
+const NoSettlements = () => {
+  const history = useHistory();
+  return (
     <Box
       p={4}
       height="100%"
@@ -15,31 +21,21 @@ const Rope = () => (
       alignItems="center"
       justifyContent="center"
     >
-      <Text mb={4} fontSize="xl" fontWeight="500">
+      <Icon as={FaHandshake} color="blue.200" my={6} w={8} h={8} />
+      {/* <Text mb={4} fontSize="xl" fontWeight="500">
         No Loan Repayments
-      </Text>
+      </Text> */}
       <Text mb={6} fontWeight="500">
-        Log a customer's loan repayment
+        Log a customer's loan settlement
       </Text>
-      <Button {...buttonStyles}>Log a repayment</Button>
+      <Button onClick={() => history.push('/payments')} {...buttonStyles}>
+        Log a payment
+      </Button>
     </Box>
-  </Card>
-);
+  );
+};
 
 export default function Overview() {
-  const { contract, accounts } = useAppState();
-  console.log({ contract, accounts });
-  // if (contract)
-  //   contract.methods
-  //     .addProvider(
-  //       '0xc4902683cc495A8afb04Ce3BC974CEA5C1c13fa0',
-  //       'maisonv',
-  //       '2500'
-  //     )
-  //     .send({
-  //       from: accounts[0],
-  //     })
-  //     .then(console.log);
   return (
     <Grid
       h="100%"
@@ -48,16 +44,22 @@ export default function Overview() {
       gap={4}
     >
       <GridItem rowSpan={{ base: 2, md: 2 }} colSpan={{ base: 1, md: 3 }}>
-        <Rope />
+        <Card title="Paid Loans">
+          <PaidLoans />
+        </Card>
       </GridItem>
       <GridItem rowSpan={{ base: 1, md: 1 }} colSpan={{ base: 1, md: 2 }}>
-        <Rope />
+        <Card title="Ongoing Loans" />
       </GridItem>
       <GridItem rowSpan={{ base: 1, md: 1 }} colSpan={{ base: 1, md: 2 }}>
-        <Rope />
+        <Card title="Settlement">
+          <NoSettlements />
+        </Card>
       </GridItem>
       <GridItem rowSpan={{ base: 2, md: 1 }} colSpan={{ base: 1, md: 5 }}>
-        <Rope />
+        <Card title="Complete Loan History">
+          <CompleteLoanHistory />
+        </Card>
       </GridItem>
     </Grid>
   );

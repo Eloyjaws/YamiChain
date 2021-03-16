@@ -33,16 +33,28 @@ contract ProviderCreation is Ownable {
     Provider[] public providers;
 
     mapping(uint256 => address) public providerToOwner;
+    mapping(address => uint256) public idToProvider;
 
     function getProviders() public view returns (Provider[] memory) {
         return providers;
+    }
+
+    function getProviderId(address _owner) public view returns (uint256) {
+        return idToProvider[_owner];
+    }
+
+    modifier noDuplicateProvider(address _owner) {
+        for (uint256 i = 0; i < providers.length; ++i) {
+            require(providers[i].owner != _owner);
+        }
+        _;
     }
 
     function createProvider(
         address _owner,
         string memory _providerName,
         string memory _providerLocation
-    ) public onlyOwner {
+    ) public onlyOwner noDuplicateProvider(_owner) {
         providers.push(
             Provider(
                 _owner,

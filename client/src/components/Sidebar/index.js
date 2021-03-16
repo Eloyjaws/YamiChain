@@ -16,6 +16,7 @@ import {
   Icon,
   Menu,
   MenuButton,
+  Image,
 } from '@chakra-ui/react';
 import { SmallCloseIcon } from '@chakra-ui/icons';
 import Logo from '../../img/yami.jpg';
@@ -77,7 +78,7 @@ export function MobileNavigationDrawer({ isOpen, onClose }) {
         <DrawerCloseButton color="gray.300" />
 
         <DrawerHeader backgroundColor="blue.400" justifyContent="center">
-          <img src={Logo} alt="Yamichain Logo" />
+          <Image padding="30% 30% 10% 0%" src={Logo} alt="Yamichain Logo" />
         </DrawerHeader>
 
         <DrawerBody backgroundColor="blue.400" color="#fff" overflowY="scroll">
@@ -97,7 +98,7 @@ export function MobileNavigationDrawer({ isOpen, onClose }) {
                 <SmallCloseIcon
                   name="small-close"
                   size="30px"
-                  color="#1dcf9f"
+                  color="#FFF"
                   style={{ paddingRight: '3px' }}
                 />
                 Sign Out
@@ -127,8 +128,8 @@ const Sidebar = () => (
       overflowY="scroll"
       justifyContent="start"
     >
-      <Flex justifyContent="center" alignItems="center" mb={116}>
-        <img src={Logo} alt="Yamichain Logo" />
+      <Flex justifyContent="center" alignItems="center" mb={76}>
+        <Image padding="10% 10% 0% 0%" src={Logo} alt="Yamichain Logo" />
       </Flex>
       <SidebarLinks {...{ menuItems }} />
       <Flex flex={1} direction="column" justifyContent="flex-end">

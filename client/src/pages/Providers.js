@@ -14,7 +14,25 @@ import { Card } from '../components/Card';
 import { buttonStyles } from '../components/styles';
 import { useAppState } from '../contexts/AppContext';
 
-export default function ProvidersTable() {
+export default function Providers() {
+  return (
+    <Grid
+      h="100%"
+      templateRows={{ base: 'repeat(4, 1fr)', md: 'repeat(2, 1fr)' }}
+      templateColumns={{ base: 'repeat(1, 1fr)', md: 'repeat(5, 1fr)' }}
+      gap={4}
+    >
+      <GridItem rowSpan={{ base: 2, md: 2 }} colSpan={{ base: 1, md: 3 }}>
+        <ProvidersTable />
+      </GridItem>
+      <GridItem rowSpan={{ base: 2, md: 2 }} colSpan={{ base: 1, md: 2 }}>
+        <AddProvider />
+      </GridItem>
+    </Grid>
+  );
+}
+
+export function ProvidersTable() {
   const [providers, setProviders] = React.useState([]);
   const data = React.useMemo(() => providers, [providers]);
 
@@ -65,21 +83,9 @@ export default function ProvidersTable() {
   }, [yamiChainContract]);
 
   return (
-    <Grid
-      h="100%"
-      templateRows={{ base: 'repeat(4, 1fr)', md: 'repeat(2, 1fr)' }}
-      templateColumns={{ base: 'repeat(1, 1fr)', md: 'repeat(5, 1fr)' }}
-      gap={4}
-    >
-      <GridItem rowSpan={{ base: 2, md: 2 }} colSpan={{ base: 1, md: 3 }}>
-        <Card title="List of Providers" boxProps={{ pb: 4 }}>
-          <DataTable columns={columns} data={data} />
-        </Card>
-      </GridItem>
-      <GridItem rowSpan={{ base: 2, md: 2 }} colSpan={{ base: 1, md: 2 }}>
-        <AddProvider />
-      </GridItem>
-    </Grid>
+    <Card title="List of Providers" boxProps={{ pb: 4 }}>
+      <DataTable columns={columns} data={data} />
+    </Card>
   );
 }
 

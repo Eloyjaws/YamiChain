@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import {
@@ -14,55 +15,65 @@ import { Card } from '../components/Card';
 import { buttonStyles } from '../components/styles';
 import { useAppState } from '../contexts/AppContext';
 
-export default function ProvidersTable() {
-  const [providers, setProviders] = React.useState([]);
-  const data = React.useMemo(() => providers, [providers]);
-
+export default function AgentsTable() {
+  const { yamiChainContract, accounts, web3 } = useAppState();
+  const [agents, setAgents] = React.useState([]);
+  const [providerId, setProviderId] = React.useState(null);
+  if (yamiChainContract) {
+    yamiChainContract.methods
+      .getProviderId(accounts[0])
+      .call()
+      .then((res) =>
+        setProviderId(web3.eth.abi.encodeParameter('uint256', res))
+      );
+  }
+  const data = React.useMemo(() => agents, [agents]);
   const columns = React.useMemo(
     () => [
       {
-        Header: 'Provider Address',
+        Header: 'Agent Address',
         accessor: 'address',
       },
       {
-        Header: 'Provider Name',
+        Header: 'Agent Name',
         accessor: 'name',
       },
       {
-        Header: 'Location',
-        accessor: 'location',
+        Header: 'Agent ID',
+        accessor: 'id',
       },
     ],
     []
   );
 
-  const { yamiChainContract } = useAppState();
-
   if (yamiChainContract)
-    yamiChainContract.events.ProviderCreated().on('data', (res) => {
+    yamiChainContract.events.NewAgentCreated().on('data', (res) => {
       // const [address, name, location] = res.returnValues;
       // // eslint-disable-next-line prettier/prettier
       const address = `${res.returnValues[0].slice(0, 16)}...`;
-      const name = res.returnValues[1];
-      const location = res.returnValues[2];
-      const parsed = { address, name, location };
-      setProviders([...providers, parsed]);
+      const name = res.returnValues[2];
+      const id = res.returnValues[3];
+      const parsed = { address, name, id };
+      setAgents([...agents, parsed]);
     });
 
   React.useEffect(() => {
-    if (yamiChainContract)
+    if (yamiChainContract && providerId !== null) {
       yamiChainContract.methods
-        .getProviders()
+        .getAgentsByProvider(providerId)
         .call()
         .then((res) => {
-          const parsed = res.map((x) => {
-            const [address, name, location] = x;
-            // eslint-disable-next-line prettier/prettier
-            return ({ address: `${address.slice(0, 16)  }...`, name, location });
-          });
-          setProviders(parsed);
+          const parsed = res
+            .map((x) => {
+              const [name, id, address] = x;
+              // eslint-disable-next-line prettier/prettier
+            return ({ address: `${address.slice(0, 16)  }...`, name, id });
+            })
+            .filter((x) => x.id !== '0' || x.name !== '');
+          setAgents(parsed);
         });
-  }, [yamiChainContract]);
+    }
+  }, [yamiChainContract, providerId]);
 
   return (
     <Grid
@@ -72,48 +83,43 @@ export default function ProvidersTable() {
       gap={4}
     >
       <GridItem rowSpan={{ base: 2, md: 2 }} colSpan={{ base: 1, md: 3 }}>
-        <Card title="List of Providers" boxProps={{ pb: 4 }}>
+        <Card title="List of Agents" boxProps={{ pb: 4 }}>
           <DataTable columns={columns} data={data} />
         </Card>
       </GridItem>
       <GridItem rowSpan={{ base: 2, md: 2 }} colSpan={{ base: 1, md: 2 }}>
-        <AddProvider />
+        <AddAgent providerId={providerId} />
       </GridItem>
     </Grid>
   );
 }
 
-function AddProvider() {
+function AddAgent({ providerId }) {
   const { handleSubmit, register, formState, reset } = useForm();
   const { yamiChainContract, accounts } = useAppState();
   function onSubmit(values) {
-    const { address, name, location } = values;
+    const { address, name, id } = values;
     console.log(yamiChainContract);
     yamiChainContract.methods
-      .createProvider(address, name, location)
+      .addAgent(providerId, name, id, address)
       .send({ from: accounts[0] })
       .then(console.log);
     reset();
   }
-
   return (
-    <Card title="Add Provider" boxProps={{ p: 6 }}>
+    <Card title="Add Agent" boxProps={{ p: 6 }}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormControl isRequired>
-          <FormLabel>Provider address</FormLabel>
-          <Input ref={register} name="address" placeholder="Provider address" />
+          <FormLabel>Agent address</FormLabel>
+          <Input ref={register} name="address" placeholder="Agent address" />
         </FormControl>
         <FormControl mt={8} isRequired>
-          <FormLabel>Provider name</FormLabel>
-          <Input ref={register} name="name" placeholder="Provider name" />
+          <FormLabel>Agent name</FormLabel>
+          <Input ref={register} name="name" placeholder="Agent name" />
         </FormControl>
         <FormControl mt={8} isRequired>
-          <FormLabel>Provider location</FormLabel>
-          <Input
-            ref={register}
-            name="location"
-            placeholder="Provider location"
-          />
+          <FormLabel>Agent ID</FormLabel>
+          <Input ref={register} name="id" placeholder="Agent ID" />
         </FormControl>
         <Button
           {...buttonStyles}

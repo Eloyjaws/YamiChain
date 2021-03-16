@@ -4,7 +4,7 @@ pragma abicoder v2;
 
 import "./providermanagement.sol";
 
-contract CustomerManagement is ProviderManagement{
+contract CustomerManagement is ProviderManagement {
     struct Customer {
         string name;
         string idNumber;
@@ -12,28 +12,43 @@ contract CustomerManagement is ProviderManagement{
         uint256 ongoingLoans;
     }
 
-    Customer [] public customers;
-    mapping (address => uint) addressToCustomer;
+    Customer[] public customers;
+    mapping(address => uint256) addressToCustomer;
 
-    modifier onlyAgent(){
-        require (getAgentIndex(msg.sender) > 0);
+    modifier onlyAgent() {
+        require(getAgentIndex(msg.sender) > 0);
         _;
     }
 
-    function addCustomer(string memory _name, string memory _id) external onlyAgent{
+    event NewCustomerCreated(string _name, string _id);
+
+    function addCustomer(string memory _name, string memory _id)
+        external
+        onlyAgent
+    {
         customers.push(Customer(_name, _id, 0, 0));
+        emit NewCustomerCreated(_name, _id);
     }
 
-    function findById(string memory _id) external view returns (Customer memory)
+    function getAllCustomers() public view returns (Customer[] memory) {
+        return customers;
+    }
+
+    function findCustomerById(string memory _id)
+        external
+        view
+        returns (Customer memory)
     {
         Customer memory result;
         for (uint256 i = 0; i < customers.length; ++i) {
-            if (keccak256(abi.encodePacked(_id)) == keccak256(abi.encodePacked(customers[i].idNumber)) ) {
+            if (
+                keccak256(abi.encodePacked(_id)) ==
+                keccak256(abi.encodePacked(customers[i].idNumber))
+            ) {
                 result = customers[i];
                 break;
             }
         }
         return result;
     }
-
 }

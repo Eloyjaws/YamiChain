@@ -15,11 +15,17 @@ export const menuItems = {
     isSubMenu: false,
     icon: FaArchive,
   },
-  '/agents': {
-    name: 'Agents',
-    value: '/agents',
+  '/loans': {
+    name: 'Loans',
+    value: '/loans',
     isSubMenu: false,
-    icon: FaCashRegister,
+    icon: FaMoneyBill,
+  },
+  '/payments': {
+    name: 'Settlements',
+    value: '/payments',
+    isSubMenu: false,
+    icon: FaHandshake,
   },
   '/customers': {
     name: 'Customers',
@@ -27,17 +33,11 @@ export const menuItems = {
     isSubMenu: false,
     icon: FaUserCircle,
   },
-  '/loans': {
-    name: 'Loans disbursed',
-    value: '/loans',
+  '/agents': {
+    name: 'Agents',
+    value: '/agents',
     isSubMenu: false,
-    icon: FaMoneyBill,
-  },
-  '/payments': {
-    name: 'Repayments',
-    value: '/payments',
-    isSubMenu: false,
-    icon: FaHandshake,
+    icon: FaCashRegister,
   },
   '/providers': {
     name: 'Providers',
