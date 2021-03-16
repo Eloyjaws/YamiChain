@@ -91,47 +91,52 @@ export function CompleteLoanHistoryTable({ customerId }) {
         accessor: 'expectedReimbursementDate',
       },
       {
-        Header: 'Last Reimbursement Date',
+        Header: 'Last Payment Date',
         accessor: 'lastReimbursementDate',
       },
     ],
     []
   );
 
-  const { yamiChainContract, web3 } = useAppState();
+  const { yamiChainContract } = useAppState();
 
   React.useEffect(() => {
-    const toUInt = (num) => web3.eth.abi.encodeParameter('uint', num);
     if (customerId == null) return;
     if (yamiChainContract)
       yamiChainContract.methods
-        .getCompleteLoanHistory(toUInt(customerId))
+        .getAllLoans()
         .call()
-        .then(console.log);
-    // .then((res) => {
-    //   const parsed = res.map((x) => {
-    //     const [
-    //       totalAmount,
-    //       totalToPay,
-    //       amountReimbursed,
-    //       contractedOn,
-    //       expectedReimbursementDate,
-    //       lastReimbursementDate,
-    //     ] = x;
-
-    //     // eslint-disable-next-line prettier/prettier
-    //     return ({
-    //       totalAmount,
-    //       totalToPay,
-    //       amountReimbursed,
-    //       contractedOn,
-    //       expectedReimbursementDate,
-    //       lastReimbursementDate,
-    //       // eslint-disable-next-line prettier/prettier
-    //     });
-    //   });
-    //   setCompleteLoanHistory(parsed);
-    // });
+        .then((loans) => {
+          const parsed = loans.map((loan) => {
+            const [
+              customerIdx,
+              totalAmount,
+              totalToPay,
+              amountReimbursed,
+              contractedOn,
+              expectedReimbursementDate,
+              lastReimbursementDate,
+            ] = loan;
+            // eslint-disable-next-line prettier/prettier
+        return ({
+              customerIdx,
+              totalAmount,
+              totalToPay,
+              amountReimbursed,
+              contractedOn,
+              expectedReimbursementDate,
+              lastReimbursementDate,
+              // eslint-disable-next-line prettier/prettier
+        });
+          });
+          const filteredLoans = parsed.filter(
+            // eslint-disable-next-line eqeqeq
+            (x) =>
+              // eslint-disable-next-line eqeqeq
+              x.customerIdx == customerId && x.amountReimbursed >= x.totalToPay
+          );
+          setCompleteLoanHistory(filteredLoans);
+        });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [yamiChainContract, customerId]);
 

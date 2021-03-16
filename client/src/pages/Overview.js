@@ -43,22 +43,22 @@ export default function Overview() {
       templateColumns={{ base: 'repeat(1, 1fr)', md: 'repeat(5, 1fr)' }}
       gap={4}
     >
+      <GridItem rowSpan={{ base: 2, md: 1 }} colSpan={{ base: 1, md: 5 }}>
+        <Card title="Complete Loan History">
+          <CompleteLoanHistory />
+        </Card>
+      </GridItem>
       <GridItem rowSpan={{ base: 2, md: 2 }} colSpan={{ base: 1, md: 3 }}>
         <Card title="Paid Loans">
           <PaidLoans />
         </Card>
       </GridItem>
       <GridItem rowSpan={{ base: 1, md: 1 }} colSpan={{ base: 1, md: 2 }}>
-        <Card title="Ongoing Loans" />
+        <Card title="Ongoing Loans">-</Card>
       </GridItem>
       <GridItem rowSpan={{ base: 1, md: 1 }} colSpan={{ base: 1, md: 2 }}>
         <Card title="Settlement">
           <NoSettlements />
-        </Card>
-      </GridItem>
-      <GridItem rowSpan={{ base: 2, md: 1 }} colSpan={{ base: 1, md: 5 }}>
-        <Card title="Complete Loan History">
-          <CompleteLoanHistory />
         </Card>
       </GridItem>
     </Grid>

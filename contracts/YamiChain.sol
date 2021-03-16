@@ -6,6 +6,7 @@ import "./customermanagement.sol";
 
 contract YamiChain is CustomerManagement {
     struct Loan {
+        uint256 _customerId;
         uint256 totalAmount;
         uint256 totalToPay;
         uint256 amountReimbursed;
@@ -37,6 +38,10 @@ contract YamiChain is CustomerManagement {
     Loan[] public loans;
     mapping(uint256 => uint256) loanToCustomer;
 
+    function getAllLoans() public view returns (Loan[] memory) {
+        return loans;
+    }
+
     // Interest rate in %
     function addLoan(
         uint256 _customerId,
@@ -48,6 +53,7 @@ contract YamiChain is CustomerManagement {
         require(_deadline > block.timestamp);
         loans.push(
             Loan(
+                _customerId,
                 _amount,
                 _amount + (interestRate * _amount) / 100,
                 0,
