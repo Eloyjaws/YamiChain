@@ -39,16 +39,14 @@ contract CustomerManagement is ProviderManagement {
         view
         returns (Customer memory)
     {
-        Customer memory result;
         for (uint256 i = 0; i < customers.length; ++i) {
             if (
                 keccak256(abi.encodePacked(_id)) ==
                 keccak256(abi.encodePacked(customers[i].idNumber))
             ) {
-                result = customers[i];
-                break;
+                return customers[i];
             }
         }
-        return result;
+        revert("No customer found with that ID");
     }
 }

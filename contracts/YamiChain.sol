@@ -151,4 +151,12 @@ contract YamiChain is CustomerManagement {
         }
         return ongoingLoans;
     }
+
+    function getAllLoans() external view returns (Loan [] memory, uint256 [] memory customerIds) {
+        customerIds = new uint256[] (loans.length);
+        for (uint i = 0; i < loans.length; i++) {
+            customerIds[i] = loanToCustomer[i];
+        }
+        return (loans, customerIds);
+    }
 }
